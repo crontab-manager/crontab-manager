@@ -1,0 +1,17 @@
+{
+    "name": "fschabmeyer/crontab-manager",
+    "authors": [
+    {
+      "name": "Michael Bladowski",
+      "email": "info@macropage.de"
+    },
+    {
+      "name": "Felix Schabmeyer",
+      "email": "fschabmeyer@googlemail.com"
+    }
+  ],
+    "require": {
+        "phpunit/phpunit": "^4.7",
+        "php": ">=5.5"
+    }
+}

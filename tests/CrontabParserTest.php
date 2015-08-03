@@ -14,6 +14,14 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
         }
     }
 
+    /**
+     *
+     */
+    public function testCrontabLinesFalse() {
+        foreach ($this->LinesToTest['false'] as $line) {
+            $this->assertFalse($this->parse($line),$line);
+        }
+    }
 
 
     /**
@@ -24,14 +32,15 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
             // '33 08 10 06 * /home/ramesh/full-backup'
             '* * * * * CMDramesh'
         ,
-            '12-12 11,12,12 11,2,3 12,12,12 1,2,3 /home/ramesh/bin/incremental-backup'
+            '12-12 11,12,12 11,2,3 12,12,12 1,2,3 /home/ramesh/bin/incremental-backup',
+            '00     09-18 *      * 1-5 /home/ramesh/bin/check-db-status', //tabs
             //,
-            //'00 09-18 * * * /home/ramesh/bin/check-db-status',
-            //'00 09-18 * * 1-5 /home/ramesh/bin/check-db-status',
-            //'00     09-18 *      * 1-5 /home/ramesh/bin/check-db-status', //tabs
-            //'00    09-18 *      * 1-5 /home/ramesh/bin/check-db-status', //tabs
-            //'*/10 * * * * /home/ramesh/check-disk-space',
-            //'* * * * * CMDramesh'
+            '00 09-18 * * * /home/ramesh/bin/check-db-status',
+            '00 09-18 * * 1-5 /home/ramesh/bin/check-db-status',
+            '00     09-18 *      * 1-5 /home/ramesh/bin/check-db-status', //tabs
+            '00    09-18 *      * 1-5 /home/ramesh/bin/check-db-status', //tabs
+            '10 * * * * /home/ramesh/check-disk-space',
+            '* * * * * CMDramesh'
 
         ),
         'false' => array(
@@ -65,6 +74,8 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
         // 3. und 4. Teil funktioniert
         //if (preg_match("/^(\*|[0-5]?[0-9]|([0-5]?[0-9])-([0-5]?[0-9])|([0-5]?[0-9])(,([0-5]?[0-9]))+)\s(\*|([0-1]?[0-9]|[2]?[0-3])|(([0-1]?[0-9]|[2]?[0-3]))-(([0-1]?[0-9]|[2]?[0-3]))|(([0-1]?[0-9]|[2]?[0-3]))(,(([0-1]?[0-9]|[2]?[0-3])))+)\s(\*|([1-2]?[0-9]|[3]?[0-1])|(([1-2]?[0-9]|[3]?[0-1]))-(([1-2]?[0-9]|[3]?[0-1]))|(([1-2]?[0-9]|[3]?[0-1]))(,(([1-2]?[0-9]|[3]?[0-1])))+)\s(\*|([0]?[0-9]|[1]?[0-2])|(([0]?[0-9]|[1]?[0-2]))-(([0]?[0-9]|[1]?[0-2]))|(([0]?[0-9]|[1]?[0-2]))(,(([0]?[0-9]|[1]?[0-2])))+)\s(\*|[0-6])\s.+$/",$line)){
         // 5. und letzter Teil funktioniert
+
+        $line = preg_replace('/\s\s+/', ' ', $line);
         if (preg_match("/^(\*|[0-5]?[0-9]|([0-5]?[0-9])-([0-5]?[0-9])|([0-5]?[0-9])(,([0-5]?[0-9]))+)\s(\*|([0-1]?[0-9]|[2]?[0-3])|(([0-1]?[0-9]|[2]?[0-3]))-(([0-1]?[0-9]|[2]?[0-3]))|(([0-1]?[0-9]|[2]?[0-3]))(,(([0-1]?[0-9]|[2]?[0-3])))+)\s(\*|([1-2]?[0-9]|[3]?[0-1])|(([1-2]?[0-9]|[3]?[0-1]))-(([1-2]?[0-9]|[3]?[0-1]))|(([1-2]?[0-9]|[3]?[0-1]))(,(([1-2]?[0-9]|[3]?[0-1])))+)\s(\*|([0]?[0-9]|[1]?[0-2])|(([0]?[0-9]|[1]?[0-2]))-(([0]?[0-9]|[1]?[0-2]))|(([0]?[0-9]|[1]?[0-2]))(,(([0]?[0-9]|[1]?[0-2])))+)\s(\*|[0-6]|[0-6]-[0-6]|[0-6](,[0-6])+)\s.+$/",$line)){
             $valuereturn = true;
         }

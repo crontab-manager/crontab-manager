@@ -9,11 +9,8 @@ allow_failures:
   - php: hhvm
   - php: nightly
   
-before_install:
-  - php /home/travis/.phpenv/versions/5.5/bin/composer self-update
- 
 install:
-  - composer update --prefer-dist
+- php composer.phar install --dev --no-interaction --prefer-source
 
 before_script:
   - phpenv config-rm xdebug.ini

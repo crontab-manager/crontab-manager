@@ -11,11 +11,14 @@ allow_failures:
   
 install:
   - composer self-update
+  - composer --version
   - composer install
   - composer update --prefer-dist
 
 before_script:
   - phpenv config-rm xdebug.ini
+  - php --version
 
 script:
   - vendor/bin/phpunit --bootstrap ./tests/bootstrap.php tests/
+  

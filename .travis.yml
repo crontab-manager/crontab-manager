@@ -10,7 +10,9 @@ allow_failures:
   - php: nightly
   
 install:
-- php composer.phar install --dev --no-interaction --prefer-source
+  - composer install
+  - composer self-update
+  - composer update --prefer-dist
 
 before_script:
   - phpenv config-rm xdebug.ini

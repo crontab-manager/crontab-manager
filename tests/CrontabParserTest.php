@@ -5,21 +5,14 @@
  */
 class CrontabParserTest extends PHPUnit_Framework_TestCase {
 
+    /**
+     * @var $Parser exporter\parser\parser
+     */
+    private $Parser;
 
-    //matches minutes 2 or 0-5 or * or 1,2 or */5
-    private $regexmin = '(?:\*|[0-5]?[0-9]|(?:[0-5]?[0-9])-(?:[0-5]?[0-9])|(?:[0-5]?[0-9])(?:,(?:[0-5]?[0-9]))+)';
-
-    //matches hours 2 or 0-5 or * or 1,2 or */5
-    private $regexhrs = '(?:\*|(?:[0-1]?[0-9]|[2]?[0-3])|(?:(?:[0-1]?[0-9]|[2]?[0-3]))-(?:(?:[0-1]?[0-9]|[2]?[0-3]))|(?:(?:[0-1]?[0-9]|[2]?[0-3]))(?:,(?:(?:[0-1]?[0-9]|[2]?[0-3])))+)';
-
-    //matches day of month 2 or 0-5 or * or 1,2 or */5
-    private $regexdom = '(?:\*|(?:[1-2]?[0-9]|[3]?[0-1])|(?:(?:[1-2]?[0-9]|[3]?[0-1]))-(?:(?:[1-2]?[0-9]|[3]?[0-1]))|(?:(?:[1-2]?[0-9]|[3]?[0-1]))(?:,(?:(?:[1-2]?[0-9]|[3]?[0-1])))+)';
-
-    //matches month 2 or 0-5 or * or 1,2 or */5
-    private $regexmon = '(?:\*|(?:[0]?[0-9]|[1]?[0-2])|(?:(?:[0]?[0-9]|[1]?[0-2]))-(?:(?:[0]?[0-9]|[1]?[0-2]))|(?:(?:[0]?[0-9]|[1]?[0-2]))(?:,(?:(?:[0]?[0-9]|[1]?[0-2])))+)';
-
-    //matches day of week 2 or 0-5 or * or 1,2 or */5
-    private $regexdow = '(?:\*|[0-6]|[0-6]-[0-6]|\*\/[0-6]|[0-6](?:,[0-6])+)';
+    public function setUp() {
+        $this->Parser = new exporter\parser\parser();
+    }
 
     private function AssertArrayCountTrue(array $array, $count) {
         if (count($array) == $count) {
@@ -45,7 +38,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
     public function testCrontabElementMinutesTrue() {
         foreach ($this->ElementsToTest['min']['true'] as $elementtotest) {
             // $this->assertTrue($this->CheckElement($elementtotest,$this->regexmin), $elementtotest);
-            $matches = $this->CheckElement($elementtotest,$this->regexmin);
+            $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexmin);
             $this->AssertArrayCountTrue($matches,2);
         }
     }
@@ -56,7 +49,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
     public function testCrontabElementMinutesFalse() {
         foreach ($this->ElementsToTest['min']['false'] as $elementtotest) {
             // $this->assertTrue($this->CheckElement($elementtotest,$this->regexmin), $elementtotest);
-            $matches = $this->CheckElement($elementtotest,$this->regexmin);
+            $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexmin);
             $this->AssertArrayCountFalse($matches);
         }
     }
@@ -66,7 +59,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
     public function testCrontabElementHoursTrue() {
         foreach ($this->ElementsToTest['hrs']['true'] as $elementtotest) {
             //$this->assertTrue($this->CheckElement($elementtotest,$this->regexhrs), $elementtotest);
-            $matches = $this->CheckElement($elementtotest,$this->regexhrs);
+            $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexhrs);
             $this->AssertArrayCountTrue($matches,2);
         }
     }
@@ -77,7 +70,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
     public function testCrontabElementHoursFalse() {
         foreach ($this->ElementsToTest['hrs']['false'] as $elementtotest) {
             //$this->assertFalse($this->CheckElement($elementtotest,$this->regexhrs), $elementtotest);
-            $matches = $this->CheckElement($elementtotest,$this->regexhrs);
+            $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexhrs);
             $this->AssertArrayCountFalse($matches);
         }
     }
@@ -87,7 +80,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
     public function testCrontabElementDomTrue() {
         foreach ($this->ElementsToTest['dom']['true'] as $elementtotest) {
 //            $this->assertTrue($this->CheckElement($elementtotest,$this->regexdom), $elementtotest);
-            $matches = $this->CheckElement($elementtotest,$this->regexdom);
+            $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexdom);
             $this->AssertArrayCountTrue($matches,2);
         }
     }
@@ -97,7 +90,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
     public function testCrontabElementDomFalse() {
         foreach ($this->ElementsToTest['dom']['false'] as $elementtotest) {
 //            $this->assertFalse($this->CheckElement($elementtotest,$this->regexdom), $elementtotest);
-            $matches = $this->CheckElement($elementtotest,$this->regexdom);
+            $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexdom);
             $this->AssertArrayCountFalse($matches);
         }
     }
@@ -107,7 +100,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
     public function testCrontabElementMonTrue() {
         foreach ($this->ElementsToTest['mon']['true'] as $elementtotest) {
 //            $this->assertTrue($this->CheckElement($elementtotest,$this->regexmon), $elementtotest);
-            $matches = $this->CheckElement($elementtotest,$this->regexmon);
+            $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexmon);
             $this->AssertArrayCountTrue($matches,2);
         }
     }
@@ -118,7 +111,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
     public function testCrontabElementMonFalse() {
         foreach ($this->ElementsToTest['mon']['false'] as $elementtotest) {
 //            $this->assertFalse($this->CheckElement($elementtotest,$this->regexmon), $elementtotest);
-            $matches = $this->CheckElement($elementtotest,$this->regexmon);
+            $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexmon);
             $this->AssertArrayCountFalse($matches);
         }
     }
@@ -129,7 +122,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
     public function testCrontabElementDowTrue() {
         foreach ($this->ElementsToTest['dow']['true'] as $elementtotest) {
 //            $this->assertTrue($this->CheckElement($elementtotest,$this->regexdow), $elementtotest);
-            $matches = $this->CheckElement($elementtotest,$this->regexdow);
+            $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexdow);
             $this->AssertArrayCountTrue($matches,2);
         }
     }
@@ -140,7 +133,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
     public function testCrontabElementDowFalse() {
         foreach ($this->ElementsToTest['dow']['false'] as $elementtotest) {
 //            $this->assertFalse($this->CheckElement($elementtotest,$this->regexdow), $elementtotest);
-            $matches = $this->CheckElement($elementtotest,$this->regexdow);
+            $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexdow);
             $this->AssertArrayCountFalse($matches);
         }
     }
@@ -150,7 +143,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
      */
     public function testCrontabLinesTrue() {
         foreach ($this->LinesToTest['true'] as $line) {
-            $this->assertTrue($this->parse($line),$line);
+            $this->assertTrue($this->Parser->parseLine($line)['state'],$line);
         }
     }
 
@@ -159,7 +152,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
      */
     public function testCrontabLinesFalse() {
         foreach ($this->LinesToTest['false'] as $line) {
-            $this->assertFalse($this->parse($line),$line);
+            $this->assertFalse($this->Parser->parseLine($line)['state'],$line);
         }
     }
 
@@ -245,26 +238,6 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
         )
     );
 
-
-    /**
-     * @param $line
-     *
-     * @return bool
-     */
-    private function parse($line) {
-         $valuereturn = false;
-
-        $regex = '/^(' . $this->regexmin . ')\s(' . $this->regexhrs. ')\s(' . $this->regexdom . ')\s(' . $this->regexmon . ')\s(' . $this->regexdow . ')\s(.+)$/';
-
-        $line = preg_replace('/\s\s+/', ' ', $line);
-
-        if (preg_match($regex,$line,$matches)) {
-            $valuereturn = true;
-        }
-
-        return $valuereturn;
-    }
-
     /**
      * @param $elementtotest
      * @param $regex
@@ -278,7 +251,6 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
                 return $matches;
             }
         }
-
         return array();
     }
 

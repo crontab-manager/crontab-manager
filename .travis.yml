@@ -9,9 +9,11 @@ allow_failures:
   - php: hhvm
   - php: nightly
 
-before_script:
+install:
   - composer self-update
   - composer update --prefer-dist
+
+before_script:
   - composer install
 
 script:

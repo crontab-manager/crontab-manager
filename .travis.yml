@@ -10,6 +10,8 @@ allow_failures:
   - php: nightly
 
 before_script:
+  - composer self-update
+  - composer update --prefer-dist
   - composer install
 
 script:

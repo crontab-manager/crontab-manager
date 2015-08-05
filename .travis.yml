@@ -8,15 +8,15 @@ php:
 allow_failures:
   - php: hhvm
   - php: nightly
-
+  
+before_install:
+  - php /home/travis/.phpenv/versions/5.3.26/bin/composer.phar self-update
+  
 install:
-  - composer self-update
   - composer update --prefer-dist
 
 before_script:
-  - phpenv config-rm opcache.ini
   - phpenv config-rm xdebug.ini
-  - composer install
 
 script:
   - vendor/bin/phpunit --bootstrap ./tests/bootstrap.php tests/

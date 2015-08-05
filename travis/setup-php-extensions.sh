@@ -9,4 +9,4 @@ function find_php_ini
 }
 
 php_ini_file=$(find_php_ini)
-	sed -i '/opcache.so/d' "$php_ini_file"
+sed -i '/opcache.so/d' "$php_ini_file"

@@ -12,7 +12,6 @@ install:
   - composer --version
   - composer install
   - composer update --prefer-dist
-  - travis/setup-php-extensions.sh
 
 before_script:
   - ./configure --disable-opcache

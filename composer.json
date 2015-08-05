@@ -1,6 +1,6 @@
 {
-    "name": "fschabmeyer/crontab-manager",
-    "authors": [
+  "name": "fschabmeyer/crontab-manager",
+  "authors": [
     {
       "name": "Michael Bladowski",
       "email": "info@macropage.de"
@@ -10,8 +10,13 @@
       "email": "fschabmeyer@googlemail.com"
     }
   ],
-    "require": {
-        "phpunit/phpunit": "^4.7",
-        "php": ">=5.5"
-    }
+  "require": {
+    "phpunit/phpunit": "^4.7",
+    "php": ">=5.5"
+  },
+  "autoload": {
+    "classmap": [
+      "inc/"
+    ]
+  }
 }

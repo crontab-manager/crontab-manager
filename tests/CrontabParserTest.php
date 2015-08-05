@@ -19,8 +19,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
     private $regexmon = '(?:\*|(?:[0]?[0-9]|[1]?[0-2])|(?:(?:[0]?[0-9]|[1]?[0-2]))-(?:(?:[0]?[0-9]|[1]?[0-2]))|(?:(?:[0]?[0-9]|[1]?[0-2]))(?:,(?:(?:[0]?[0-9]|[1]?[0-2])))+)';
 
     //matches day of week 2 or 0-5 or * or 1,2 or */5
-    private $regexdow = '(?:\*|[0-6]|[0-6]-[0-6]|[0-6](?:,[0-6])+)';
-
+    private $regexdow = '(?:\*|[0-6]|[0-6]-[0-6]|\*\/[0-6]|[0-6](?:,[0-6])+)';
 
     private function AssertArrayCountTrue(array $array, $count) {
         if (count($array) == $count) {
@@ -213,7 +212,8 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
             'true' => array(
                 '0-5',
                 '1,3,5',
-                '*'
+                '*',
+                '*/5'
             ),
             'false' => array(
                 '99',

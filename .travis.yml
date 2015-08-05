@@ -10,8 +10,8 @@ allow_failures:
   - php: nightly
   
 before_install:
-  - composer self-update
-  
+  - php /home/travis/.phpenv/versions/5.5/bin/composer self-update
+ 
 install:
   - composer update --prefer-dist
 

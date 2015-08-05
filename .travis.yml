@@ -10,6 +10,7 @@ install:
   - composer update --prefer-dist
 
 before_script:
+  - chmod +x travis/setup-php-extensions.sh
   - travis/setup-php-extensions.sh
   - phpenv config-rm xdebug.ini
   - php --version

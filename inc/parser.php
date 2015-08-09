@@ -21,7 +21,6 @@ class parser {
      *
      */
     public function getCrontabFromRemoteServer(){
-        echo "FSgetCrontabFromRemoteServer\n";
     }
 
 }

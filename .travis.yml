@@ -21,7 +21,5 @@ before_script:
 
 script:
   - vendor/bin/phpunit --bootstrap ./tests/bootstrap.php tests/
-  
-after_script:
-  - vendor/bin/test-reporter
+
 

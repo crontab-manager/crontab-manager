@@ -17,4 +17,11 @@ class parser {
         return array('state' => false);
     }
 
+    /**
+     *
+     */
+    public function getCrontabFromRemoteServer(){
+        echo "FSgetCrontabFromRemoteServer\n";
+    }
+
 }

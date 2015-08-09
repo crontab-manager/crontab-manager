@@ -4,6 +4,10 @@ php:
   - 5.6
   - nightly
 
+addons:
+  code_climate:
+    repo_token: 850707f5b5d621b8149d6f95e05a1abe356be323b90ebc24edd51f3bf40da14c
+
 install:
   - composer self-update
   - composer --version
@@ -19,5 +23,4 @@ script:
   - vendor/bin/phpunit --bootstrap ./tests/bootstrap.php tests/
   
 after_script:
- - chmod +x ./codeclimate.sh
- - ./codeclimate.sh
+  - vendor/bin/test-reporter

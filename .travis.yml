@@ -3,7 +3,6 @@ language: php
 php:
   - 5.5
   - 5.6
-  - nightly
 
 before_install:
   - sudo apt-get update -qq
@@ -26,6 +25,3 @@ script:
   - if [[ ${TRAVIS_PHP_VERSION} != "nightly" ]]; then vendor/bin/phpunit --coverage-clover tmp/clover.xml --bootstrap ./tests/bootstrap.php tests/; ./vendor/bin/test-reporter --coverage-report tmp/clover.xml; fi
   - if [[ ${TRAVIS_PHP_VERSION} == "nightly" ]]; then vendor/bin/phpunit --bootstrap ./tests/bootstrap.php tests/; fi
 
-matrix:
-    allow_failures:
-        - php: nightly

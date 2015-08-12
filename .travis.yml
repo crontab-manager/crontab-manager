@@ -18,6 +18,6 @@ before_script:
 script:
   - ls -al
   - mkdir tmp
-  - vendor/bin/phpunit --coverage-clover tmp/clover.xml --bootstrap ./tests/bootstrap.php tests/
-  - ./vendor/bin/test-reporter --coverage-report tmp/clover.xml
+  - if [[ "$TRAVIS_PHP_VERSION" -lt "7.0.0" ]]; then vendor/bin/phpunit --coverage-clover tmp/clover.xml --bootstrap ./tests/bootstrap.php tests/; ./vendor/bin/test-reporter --coverage-report tmp/clover.xml; fi
+  - if [[ "$TRAVIS_PHP_VERSION" -ge "7.0.0" ]]; then vendor/bin/phpunit --bootstrap ./tests/bootstrap.php tests/; fi
 

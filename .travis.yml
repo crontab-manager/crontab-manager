@@ -14,10 +14,9 @@ before_script:
   - chmod +x travis/setup-php-extensions.sh
   - travis/setup-php-extensions.sh
   - php --version
+  - php -m
 
 script:
-  - echo ${TRAVIS_PHP_VERSION}
-  - echo ${TRAVIS_PHP_VERSION:0:1}
   - mkdir tmp
   - if [[ ${TRAVIS_PHP_VERSION} != "nightly" ]]; then vendor/bin/phpunit --coverage-clover tmp/clover.xml --bootstrap ./tests/bootstrap.php tests/; ./vendor/bin/test-reporter --coverage-report tmp/clover.xml; fi
   - if [[ ${TRAVIS_PHP_VERSION} == "nightly" ]]; then vendor/bin/phpunit --bootstrap ./tests/bootstrap.php tests/; fi

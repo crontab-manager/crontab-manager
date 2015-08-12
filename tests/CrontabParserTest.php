@@ -10,6 +10,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
      */
     private $Parser;
 
+
     public function setUp() {
         $this->Parser = new exporter\parser\parser();
     }

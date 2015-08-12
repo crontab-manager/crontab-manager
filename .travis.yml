@@ -20,6 +20,7 @@ before_script:
   - php --version
 
 script:
-  - vendor/bin/phpunit --bootstrap ./tests/bootstrap.php tests/
-
+  - vendor/bin/phpunit --coverage-clover /tmp/clover.xml --bootstrap ./tests/bootstrap.php tests/
+  - export CODECLIMATE_REPO_TOKEN=850707f5b5d621b8149d6f95e05a1abe356be323b90ebc24edd51f3bf40da14c
+  - ./vendor/bin/test-reporter
 

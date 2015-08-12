@@ -12,7 +12,8 @@
   ],
   "require": {
     "phpunit/phpunit": "^4.7",
-    "php": ">=5.5"
+    "php": ">=5.5",
+    "ext-ssh2" : "*"
   },
   "autoload": {
     "classmap": [

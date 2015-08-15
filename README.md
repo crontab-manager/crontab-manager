@@ -6,6 +6,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/fschabmeyer/crontab-manager/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/fschabmeyer/crontab-manager/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/fschabmeyer/crontab-manager/badges/build.png?b=master)](https://scrutinizer-ci.com/g/fschabmeyer/crontab-manager/build-status/master)
 
+
 Distributed crontab manager
 
 Under development.

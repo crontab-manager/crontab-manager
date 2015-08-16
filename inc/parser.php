@@ -5,13 +5,13 @@ use exporter\regex;
 
 class parser {
 
-    private $ServerToTest = Array();
+    public $ServerToTest = Array();
 
     /**
      *
      * @return array
      */
-    private function getIniSettings(){
+    public function getIniSettings(){
         $filename = "config.ini";
         $array = parse_ini_file($filename);
         $this->ServerToTest = $array;
@@ -21,7 +21,7 @@ class parser {
      * @param $serveriptotest
      * @return resource
      */
-    private function getsshConnection($serveriptotest){
+    public function getsshConnection($serveriptotest){
         $connection = ssh2_connect($serveriptotest, 22);
         ssh2_auth_password($connection, 'root', 'test');
         return $connection;
@@ -32,8 +32,8 @@ class parser {
      * @param $commandtotest
      * @return string
      */
-    private function getsshStreamData($connection, $commandtotest){
-        $stream = ssh2_exec($connection, "tail /var/spool/cron/crontabs/root");
+    public function getsshStreamData($connection, $commandtotest){
+        $stream = ssh2_exec($connection, $commandtotest);
         stream_set_blocking($stream, true);
         $data = "";
         while ($buf = fread($stream, 4096)) {
@@ -46,23 +46,31 @@ class parser {
     /**
      *
      */
-    private function getCrontabFromRemoteServer(){
-        foreach ($this->ServerToTest["serverip"] as $serveriptotest) {
+    public function getCrontabFromRemoteServer(){
+        $this->getIniSettings();
+        foreach ($this->ServerToTest['serverip'] as $serveriptotest) {
             $connection = $this->getsshConnection($serveriptotest);
             $data = $this->getsshStreamData($connection,"tail /var/spool/cron/crontabs/root");
             $splitdata=explode("\n",$data);
+            $x = 0;
+            $arraydb = array();
+
            foreach ($splitdata as $crontabline){
                if (substr($crontabline,0,1) == '#') {
-                   echo $crontabline."\n";
+                   $arraydb[$x]['comment'] = $crontabline."\n";
+                   //echo $arraydb[$x]['comment'];
                }
                else {
                    $parsedline = $this->parseLine($crontabline);
                    if ($parsedline['state']== 1) {
-                       echo $crontabline."\n";
+                       $arraydb[$x]['command'] = $crontabline."\n";
+                       echo $arraydb[$x]['command'];
+                       $x++;
+                       //echo $crontabline."\n";
                    }
                }
-
             }
+            print_r($arraydb);
 
         }
     }

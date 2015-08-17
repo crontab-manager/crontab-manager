@@ -48,13 +48,13 @@ class parser {
      */
     public function getCrontabFromRemoteServer(){
         $this->getIniSettings();
+        $arraydb = array();
         foreach ($this->ServerToTest['serverip'] as $serveriptotest) {
             $connection = $this->getsshConnection($serveriptotest);
             $data = $this->getsshStreamData($connection,"tail /var/spool/cron/crontabs/root");
             $splitdata=explode("\n",$data);
             $x = 0;
             $comment = "";
-            $arraydb = array();
 
            foreach ($splitdata as $crontabline){
                if ($crontabline=="") {
@@ -73,6 +73,7 @@ class parser {
                }
             }
         }
+        return $arraydb;
     }
 
     /**

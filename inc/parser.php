@@ -69,12 +69,9 @@ class parser {
                        $arraydb[$x]['comment'] = $comment;
                        $arraydb[$x]['command'] = $crontabline."\n";
                        $x++;
-                       //echo $crontabline."\n";
                    }
                }
             }
-            var_dump($arraydb);
-
         }
     }
 

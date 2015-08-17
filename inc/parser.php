@@ -53,24 +53,27 @@ class parser {
             $data = $this->getsshStreamData($connection,"tail /var/spool/cron/crontabs/root");
             $splitdata=explode("\n",$data);
             $x = 0;
+            $comment = "";
             $arraydb = array();
 
            foreach ($splitdata as $crontabline){
-               if (substr($crontabline,0,1) == '#') {
-                   $arraydb[$x]['comment'] = $crontabline."\n";
-                   //echo $arraydb[$x]['comment'];
+               if ($crontabline=="") {
+                   $comment = "";
+               }
+               elseif (substr($crontabline,0,1) == '#') {
+                   $comment .= $crontabline."\n";
                }
                else {
                    $parsedline = $this->parseLine($crontabline);
                    if ($parsedline['state']== 1) {
+                       $arraydb[$x]['comment'] = $comment;
                        $arraydb[$x]['command'] = $crontabline."\n";
-                       echo $arraydb[$x]['command'];
                        $x++;
                        //echo $crontabline."\n";
                    }
                }
             }
-            print_r($arraydb);
+            var_dump($arraydb);
 
         }
     }

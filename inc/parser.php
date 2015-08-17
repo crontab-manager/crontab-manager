@@ -75,7 +75,6 @@ class parser {
         }
     }
 
-
     /**
      * @param $line
      *

@@ -5,7 +5,9 @@ use exporter\regex;
 
 class parser {
 
-    public $ServerToTest = Array();
+    private $ServerToTest = Array();
+    private $x = 0;
+    public $arrayparsedcrontab = Array();
 
     /**
      *
@@ -43,37 +45,50 @@ class parser {
         return $data;
     }
 
+    public function getAllCrontabs()
+    {
+        $this->getIniSettings();
+        foreach ($this->ServerToTest['serverip'] as $serveriptotest) {
+             $this->getCrontabFromRemoteServer($serveriptotest);
+        }
+        print_r($this->arrayparsedcrontab);
+    }
+
     /**
      *
+     * @param $serveriptotest
      */
-    public function getCrontabFromRemoteServer(){
-        $this->getIniSettings();
-        $arraydb = array();
-        foreach ($this->ServerToTest['serverip'] as $serveriptotest) {
+    public function getCrontabFromRemoteServer($serveriptotest){
             $connection = $this->getsshConnection($serveriptotest);
             $data = $this->getsshStreamData($connection,"tail /var/spool/cron/crontabs/root");
             $splitdata=explode("\n",$data);
-            $x = 0;
-            $comment = "";
+            $this->getParsedCrontab($splitdata,$serveriptotest);
+        // return $arrayparsedcrontab;
+    }
 
-           foreach ($splitdata as $crontabline){
-               if ($crontabline=="") {
-                   $comment = "";
-               }
-               elseif (substr($crontabline,0,1) == '#') {
-                   $comment .= $crontabline."\n";
-               }
-               else {
-                   $parsedline = $this->parseLine($crontabline);
-                   if ($parsedline['state']== 1) {
-                       $arraydb[$x]['comment'] = $comment;
-                       $arraydb[$x]['command'] = $crontabline."\n";
-                       $x++;
-                   }
-               }
+    /**
+     * @param $splitdata
+     * @param $serveriptotest
+     */
+    public function getParsedCrontab($splitdata,$serveriptotest){
+        $comment = "";
+        foreach ($splitdata as $crontabline){
+            if ($crontabline=="") {
+                $comment = "";
+            }
+            elseif (substr($crontabline,0,1) == '#') {
+                $comment .= $crontabline."\n";
+            }
+            else {
+                $parsedline = $this->parseLine($crontabline);
+                if ($parsedline['state']== 1) {
+                    $this->arrayparsedcrontab[$this->x]['serverip'] = $serveriptotest;
+                    $this->arrayparsedcrontab[$this->x]['comment'] = $comment;
+                    $this->arrayparsedcrontab[$this->x]['command'] = $crontabline."\n";
+                    $this->x++;
+                }
             }
         }
-        return $arraydb;
     }
 
     /**

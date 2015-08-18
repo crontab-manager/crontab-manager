@@ -62,6 +62,7 @@ class parser {
             $connection = $this->getsshConnection($serveriptotest);
             $data = $this->getsshStreamData($connection,"tail /var/spool/cron/crontabs/root");
             $splitdata=explode("\n",$data);
+            print_r ($splitdata);
             $this->getParsedCrontab($splitdata,$serveriptotest);
         // return $arrayparsedcrontab;
     }
@@ -69,6 +70,7 @@ class parser {
     /**
      * @param $splitdata
      * @param $serveriptotest
+     * @return bool
      */
     public function getParsedCrontab($splitdata,$serveriptotest){
         $comment = "";
@@ -89,6 +91,7 @@ class parser {
                 }
             }
         }
+        return true;
     }
 
     /**

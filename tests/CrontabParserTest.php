@@ -157,6 +157,12 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
         }
     }
 
+
+//    public function testParsedCrontab() {
+//        $matches = $this->Parser->getParsedCrontab("#1234\n* * * * * /test.sh","testserver");
+//        $this->AssertArrayCountTrue($matches);
+//    }
+
     private $ElementsToTest = array(
         'min' => array(
             'true' => array(

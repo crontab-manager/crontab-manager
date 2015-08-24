@@ -1,7 +1,0 @@
-#This file must be matched and renamed to config.ini
-#Definition of the server which should be used in the crontab-manager.
-#Only the jobs of the user root will be read.
-#(/var/spool/cron/crontabs/root)
-
-#servername=testserver
-#serverip=192.0.0.1

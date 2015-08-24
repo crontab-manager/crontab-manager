@@ -1,0 +1,15 @@
+[server1]
+servername=localhost
+serverip=127.0.0.1
+[server2]
+servername=localhost2
+serverip=127.0.0.1
+[server3]
+servername=localhost3
+serverip=127.0.0.1
+[server4]
+servername=localhost4
+serverip=127.0.0.1
+[server5]
+servername=localhost5
+serverip=127.0.0.1

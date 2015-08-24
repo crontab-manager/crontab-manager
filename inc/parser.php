@@ -5,48 +5,18 @@ use exporter\regex;
 
 class parser {
 
-    private $ServerToTest = Array();
-    private $x = 0;
-    public $arrayparsedcrontab = Array();
+    private $matches_keys = array('match','m','h','dom','mon','dow','command');
+
+    private $arrayparsedcrontab = Array();
 
     /**
-     *
      * @return array
      */
-    public function getIniSettings(){
-        $filename = "config.ini";
-        $array = parse_ini_file($filename);
-        $this->ServerToTest = $array;
+    public function getArrayparsedcrontab() {
+        return $this->arrayparsedcrontab;
     }
 
-    /**
-     * @param $serveriptotest
-     * @return resource
-     */
-    public function getsshConnection($serveriptotest){
-        $connection = ssh2_connect($serveriptotest, 22);
-        ssh2_auth_password($connection, 'root', 'test');
-        return $connection;
-        }
-
-    /**
-     * @param $connection
-     * @param $commandtotest
-     * @return string
-     */
-    public function getsshStreamData($connection, $commandtotest){
-        $stream = ssh2_exec($connection, $commandtotest);
-        stream_set_blocking($stream, true);
-        $data = "";
-        while ($buf = fread($stream, 4096)) {
-            $data .= $buf;
-        }
-        fclose($stream);
-        return $data;
-    }
-
-    public function getAllCrontabs()
-    {
+    public function getAllCrontabs() {
         $this->getIniSettings();
         foreach ($this->ServerToTest['serverip'] as $serveriptotest) {
              $this->getCrontabFromRemoteServer($serveriptotest);
@@ -55,43 +25,42 @@ class parser {
     }
 
     /**
-     *
-     * @param $serveriptotest
-     */
-    public function getCrontabFromRemoteServer($serveriptotest){
-            $connection = $this->getsshConnection($serveriptotest);
-            $data = $this->getsshStreamData($connection,"tail /var/spool/cron/crontabs/root");
-            $splitdata=explode("\n",$data);
-            print_r ($splitdata);
-            $this->getParsedCrontab($splitdata,$serveriptotest);
-        // return $arrayparsedcrontab;
-    }
-
-    /**
      * @param $splitdata
-     * @param $serveriptotest
-     * @return bool
+     * @return array
      */
-    public function getParsedCrontab($splitdata,$serveriptotest){
+    public function getParsedCrontab($splitdata) {
         $comment = "";
+        $return  = array();
+        $group   = 0;
         foreach ($splitdata as $crontabline){
             if ($crontabline=="") {
                 $comment = "";
+                $group++;
             }
-            elseif (substr($crontabline,0,1) == '#') {
-                $comment .= $crontabline."\n";
+            elseif ($crontabline[0] == '#') {
+                $comment .= substr($crontabline,1)."\n";
             }
             else {
                 $parsedline = $this->parseLine($crontabline);
                 if ($parsedline['state']== 1) {
-                    $this->arrayparsedcrontab[$this->x]['serverip'] = $serveriptotest;
-                    $this->arrayparsedcrontab[$this->x]['comment'] = $comment;
-                    $this->arrayparsedcrontab[$this->x]['command'] = $crontabline."\n";
-                    $this->x++;
+                    /*
+                    echo "=====================================\n";
+                    echo "LINE: ".$crontabline."\n";
+                    echo "GROUP: ".$group."\n";
+                    echo "=====================================\n";
+                    */
+                    $return[$group][]=array(
+                      'comment' => $comment,
+                      'command' => $crontabline,
+                      'matches' => array_combine($this->matches_keys,$parsedline['matches'])
+                    );
+
+                } else {
+                    echo "### Ignore Line: ".$crontabline."\n";
                 }
             }
         }
-        return true;
+        return $return;
     }
 
     /**

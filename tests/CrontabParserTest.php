@@ -15,18 +15,18 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
         $this->Parser = new exporter\parser\parser();
     }
 
-    private function AssertArrayCountTrue(array $array, $count) {
+    private function AssertArrayCountTrue(array $array, $count, $elementtotest) {
         if (count($array) == $count) {
             $this->assertTrue(true);
         }
         else {
-            $this->assertTrue(false);
+            $this->assertTrue(false,$elementtotest);
         }
     }
 
-    private function AssertArrayCountFalse(array $array) {
+    private function AssertArrayCountFalse(array $array, $elementtotest) {
         if (count($array) > 1) {
-            $this->assertFalse(true);
+            $this->assertFalse(true,$elementtotest);
         }
         else {
             $this->assertFalse(false);
@@ -40,7 +40,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
         foreach ($this->ElementsToTest['min']['true'] as $elementtotest) {
             // $this->assertTrue($this->CheckElement($elementtotest,$this->regexmin), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexmin);
-            $this->AssertArrayCountTrue($matches,2);
+            $this->AssertArrayCountTrue($matches,2,$elementtotest);
         }
     }
 
@@ -51,7 +51,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
         foreach ($this->ElementsToTest['min']['false'] as $elementtotest) {
             // $this->assertTrue($this->CheckElement($elementtotest,$this->regexmin), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexmin);
-            $this->AssertArrayCountFalse($matches);
+            $this->AssertArrayCountFalse($matches,$elementtotest);
         }
     }
     /**
@@ -61,7 +61,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
         foreach ($this->ElementsToTest['hrs']['true'] as $elementtotest) {
             //$this->assertTrue($this->CheckElement($elementtotest,$this->regexhrs), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexhrs);
-            $this->AssertArrayCountTrue($matches,2);
+            $this->AssertArrayCountTrue($matches,2,$elementtotest);
         }
     }
 
@@ -72,7 +72,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
         foreach ($this->ElementsToTest['hrs']['false'] as $elementtotest) {
             //$this->assertFalse($this->CheckElement($elementtotest,$this->regexhrs), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexhrs);
-            $this->AssertArrayCountFalse($matches);
+            $this->AssertArrayCountFalse($matches,$elementtotest);
         }
     }
     /**
@@ -82,7 +82,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
         foreach ($this->ElementsToTest['dom']['true'] as $elementtotest) {
 //            $this->assertTrue($this->CheckElement($elementtotest,$this->regexdom), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexdom);
-            $this->AssertArrayCountTrue($matches,2);
+            $this->AssertArrayCountTrue($matches,2,$elementtotest);
         }
     }
     /**
@@ -92,7 +92,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
         foreach ($this->ElementsToTest['dom']['false'] as $elementtotest) {
 //            $this->assertFalse($this->CheckElement($elementtotest,$this->regexdom), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexdom);
-            $this->AssertArrayCountFalse($matches);
+            $this->AssertArrayCountFalse($matches,$elementtotest);
         }
     }
     /**
@@ -102,7 +102,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
         foreach ($this->ElementsToTest['mon']['true'] as $elementtotest) {
 //            $this->assertTrue($this->CheckElement($elementtotest,$this->regexmon), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexmon);
-            $this->AssertArrayCountTrue($matches,2);
+            $this->AssertArrayCountTrue($matches,2,$elementtotest);
         }
     }
 
@@ -113,7 +113,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
         foreach ($this->ElementsToTest['mon']['false'] as $elementtotest) {
 //            $this->assertFalse($this->CheckElement($elementtotest,$this->regexmon), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexmon);
-            $this->AssertArrayCountFalse($matches);
+            $this->AssertArrayCountFalse($matches,$elementtotest);
         }
     }
 
@@ -124,7 +124,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
         foreach ($this->ElementsToTest['dow']['true'] as $elementtotest) {
 //            $this->assertTrue($this->CheckElement($elementtotest,$this->regexdow), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexdow);
-            $this->AssertArrayCountTrue($matches,2);
+            $this->AssertArrayCountTrue($matches,2,$elementtotest);
         }
     }
 
@@ -135,7 +135,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
         foreach ($this->ElementsToTest['dow']['false'] as $elementtotest) {
 //            $this->assertFalse($this->CheckElement($elementtotest,$this->regexdow), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexdow);
-            $this->AssertArrayCountFalse($matches);
+            $this->AssertArrayCountFalse($matches,$elementtotest);
         }
     }
 
@@ -168,11 +168,15 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
             'true' => array(
                 '0-5',
                 '1,3,5',
-                '*'
+                '*',
+                '*/15',
+                '*/0',
+                '*/59',
             ),
             'false' => array(
                 '69',
-                'a'
+                'a',
+                '*/99'
             )
         ),
         'hrs' => array(

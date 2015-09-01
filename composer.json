@@ -13,7 +13,8 @@
   "require": {
     "phpunit/phpunit": "^4.7",
     "php": ">=5.5 <7.0",
-    "ext-ssh2" : "*"
+    "ext-ssh2" : "*",
+    "pimple/pimple": "~3.0"
   },
   "autoload": {
     "classmap": [

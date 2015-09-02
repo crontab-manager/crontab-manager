@@ -3,8 +3,13 @@ use exporter\config\config;
 use exporter\db\db;
 use Pimple\Container;
 
+
+
 /**
  * Class DBTest
+ */
+/**
+ * @group ignore
  */
 class DBTest extends PHPUnit_Framework_TestCase {
 

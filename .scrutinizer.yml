@@ -11,4 +11,4 @@ tools:
 filter:
     excluded_paths:
     - inc/regex.php
-    -tests/DBTest.php
+    - tests/DBTest.php

@@ -17,10 +17,10 @@ before_script:
 - php -m
 script:
 - mkdir tmp
-- if [[ ${TRAVIS_PHP_VERSION} != "nightly" ]]; then vendor/bin/phpunit --exclude-group ignore --coverage-clover
+- if [[ ${TRAVIS_PHP_VERSION} != "nightly" ]]; then vendor/bin/phpunit --exclude-group live --coverage-clover
   tmp/clover.xml --bootstrap ./tests/bootstrap.php tests/; ./vendor/bin/test-reporter
   --coverage-report tmp/clover.xml; fi
-- if [[ ${TRAVIS_PHP_VERSION} == "nightly" ]]; then vendor/bin/phpunit --exclude-group ignore --bootstrap
+- if [[ ${TRAVIS_PHP_VERSION} == "nightly" ]]; then vendor/bin/phpunit --exclude-group live --bootstrap
   ./tests/bootstrap.php tests/; fi
 after_script:
 - wget https://scrutinizer-ci.com/ocular.phar

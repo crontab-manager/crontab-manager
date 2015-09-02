@@ -9,7 +9,7 @@ use Pimple\Container;
  * Class DBTest
  */
 /**
- * @group ignore
+ * @group live
  */
 class DBTest extends PHPUnit_Framework_TestCase {
 

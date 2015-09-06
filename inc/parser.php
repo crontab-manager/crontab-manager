@@ -1,12 +1,14 @@
 <?php
 namespace exporter\parser;
 use exporter\regex;
+use exporter\ssh;
+use exporter\config;
 
 
 class parser {
 
     private $matches_keys = array('match','m','h','dom','mon','dow','command');
-
+    private $matches_keys_inactive = array('match','comment','m','h','dom','mon','dow','command');
     private $arrayparsedcrontab = Array();
 
     /**
@@ -17,9 +19,11 @@ class parser {
     }
 
     public function getAllCrontabs() {
-        $this->getIniSettings();
-        foreach ($this->ServerToTest['serverip'] as $serveriptotest) {
-             $this->getCrontabFromRemoteServer($serveriptotest);
+        $ssh = new ssh\ssh();
+        $config = new config\config();
+        $server = $config->getServers();
+        foreach ($server['serverip'] as $serveriptotest) {
+             $ssh->getCrontabFromRemoteServer($serveriptotest,"root");
         }
         print_r($this->arrayparsedcrontab);
     }
@@ -29,38 +33,55 @@ class parser {
      * @return array
      */
     public function getParsedCrontab($splitdata) {
-        $comment = "";
         $return  = array();
         $group   = 0;
-        foreach ($splitdata as $crontabline){
-            if ($crontabline=="") {
+        $x = 0;
+        $parsedline= "";
+        $comment = "";
+        $groupcomment = "";
+
+        foreach ($splitdata as $crontabline) {
+            //echo $crontabline."\n";
+            //leere Zeile
+            if ($crontabline == "") {
                 $comment = "";
                 $group++;
-            }
-            elseif ($crontabline[0] == '#') {
-                $comment .= substr($crontabline,1)."\n";
-            }
-            else {
+                $x = 0;
+                $return[$group] = array(
+                    'groupcomment' => '',
+                    'jobs' => array()
+                );
+            } else {
                 $parsedline = $this->parseLine($crontabline);
-                if ($parsedline['state']== 1) {
-                    /*
-                    echo "=====================================\n";
-                    echo "LINE: ".$crontabline."\n";
-                    echo "GROUP: ".$group."\n";
-                    echo "=====================================\n";
-                    */
-                    $return[$group][]=array(
-                      'comment' => $comment,
-                      'command' => $crontabline,
-                      'matches' => array_combine($this->matches_keys,$parsedline['matches'])
-                    );
-
-                } else {
-                    echo "### Ignore Line: ".$crontabline."\n";
+            }
+            print_r($parsedline);
+            //kein Ergebnis
+            if ($parsedline['state'] == 0) {
+                if ($crontabline[0] == '#') {
+                    $return[$group]['groupcomment'] = substr($crontabline, 1) . "\n";
                 }
+            } elseif ($parsedline['state'] == 1) {
+                echo "=====================================\n";
+                echo "LINE: " . $crontabline . "\n";
+                echo "GROUP: " . $group . "\n";
+                echo "x: " . $x . "\n";
+                echo "=====================================\n";
+                if ($parsedline['job'] == 'inactive command') {
+                    $keystomatch = $this->matches_keys_inactive;
+                }
+                else {
+                    $keystomatch = $this->matches_keys;
+                }
+
+                $return[$group]['jobs'][] = array(
+                    'comment' => $comment,
+                    'command' => $crontabline,
+                    'matches' => array_combine($keystomatch, $parsedline['matches'])
+                );
+                $x++;
             }
         }
-        return $return;
+
     }
 
     /**
@@ -71,11 +92,18 @@ class parser {
     public function parseLine($line) {
         $regex = '/^(' . regex::$regexmin . ')\s+(' . regex::$regexhrs. ')\s+(' . regex::$regexdom . ')\s+(' . regex::$regexmon . ')\s+(' . regex::$regexdow . ')\s+(.+)$/';
         if (preg_match($regex,$line,$matches)) {
-            return array('state' => true, 'matches' => $matches);
+            return array('state' => true, 'matches' => $matches, 'job' => "command", 'comment' => "");
         }
-        return array('state' => false);
-    }
+        else {
+            $comment = "";
+            $regex = '/^([#]+[^#]*#+)\s+(' . regex::$regexmin . ')\s+(' . regex::$regexhrs. ')\s+(' . regex::$regexdom . ')\s+(' . regex::$regexmon . ')\s+(' . regex::$regexdow . ')\s+(.+)$/';
 
+            if (preg_match($regex,$line,$matches)) {
+                return array('state' => true, 'matches' => $matches, 'job' => "inactive command", 'comment' => $comment);
+            }
+        }
+        return array('state' => false,'job' => "empty");
+    }
 
 
 }

@@ -240,12 +240,12 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
             '00     09-18 *      * 1-5 /home/ramesh/bin/check-db-statusn && echo "  test  "', //tabs
             '00    09-18 *      * 1-5 /home/ramesh/bin/check-db-status', //tabs
             '10 * * * * /home/ramesh/check-disk-space',
-            '* * * * * CMDramesh'
+            '* * * * * CMDramesh',
         ),
         'false' => array(
             '00 09-18 * *  /home/ramesh/bin/check-db-status',
             '*/10 a * * * /home/ramesh/check-disk-space',
-            '* * * * * '
+            '* * * * * ',
         )
     );
 
@@ -263,6 +263,41 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
             }
         }
         return array();
+    }
+
+    /**
+     * @var array
+     */
+    private $LinesToTestinactive = array(
+        'true' => array(
+            '#123# * * * * * CMDramesh',
+            '## tmp deaktiviert ## * * * * * echo "test"'
+        ),
+        'false' => array(
+            '#tmp deaktiviert#',
+            '##34254## * * '
+        )
+    );
+
+    /**
+     *
+     */
+    public function testCrontabLinesInactiveTrue() {
+        foreach ($this->LinesToTestinactive['true'] as $line) {
+            //$this->assertTrue($this->Parser->parseLine($line)['state'],$line);
+            $parseLineInactive = $this->Parser->parseLine($line);
+            $this->assertTrue($parseLineInactive['job'] == "inactive command");
+        }
+    }
+
+    /**
+     *
+     */
+    public function testCrontabLinesInactiveFalse() {
+        foreach ($this->LinesToTestinactive['false'] as $line) {
+            $parseLineInactive = $this->Parser->parseLine($line);
+            $this->assertFalse($parseLineInactive['job'] == "inactive command");
+        }
     }
 
 }

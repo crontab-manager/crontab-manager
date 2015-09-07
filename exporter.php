@@ -22,7 +22,9 @@ foreach ($config->getServers() as $server => $serverconfig) {
     echo "IP        : ".$serverconfig['serverip']."\n";
     $crontab = \exporter\ssh\ssh::getCrontabFromRemoteServer($serverconfig['serverip'],'root');
     $crontab_parsed = $parser->getParsedCrontab($crontab);
-    var_dump($crontab_parsed);
+    echo "Array aus getParsedCrontab: ";
+    print_r($crontab_parsed);
+    echo"\n";
 }
 
 

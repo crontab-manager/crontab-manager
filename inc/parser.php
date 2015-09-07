@@ -41,10 +41,11 @@ class parser {
         $groupcomment = "";
 
         foreach ($splitdata as $crontabline) {
-            //echo $crontabline."\n";
+            $commentinactive = "";
             //leere Zeile
             if ($crontabline == "") {
                 $comment = "";
+                $groupcomment = "";
                 $group++;
                 $x = 0;
                 $return[$group] = array(
@@ -53,35 +54,41 @@ class parser {
                 );
             } else {
                 $parsedline = $this->parseLine($crontabline);
-            }
-            print_r($parsedline);
-            //kein Ergebnis
-            if ($parsedline['state'] == 0) {
-                if ($crontabline[0] == '#') {
-                    $return[$group]['groupcomment'] = substr($crontabline, 1) . "\n";
-                }
-            } elseif ($parsedline['state'] == 1) {
-                echo "=====================================\n";
-                echo "LINE: " . $crontabline . "\n";
-                echo "GROUP: " . $group . "\n";
-                echo "x: " . $x . "\n";
-                echo "=====================================\n";
-                if ($parsedline['job'] == 'inactive command') {
-                    $keystomatch = $this->matches_keys_inactive;
-                }
-                else {
-                    $keystomatch = $this->matches_keys;
-                }
+                //kein Ergebnis
+                if ($parsedline['state'] == 0) {
+                    if ($crontabline[0] == '#') {
+                        $groupcomment = substr($crontabline, 1) . "\n";
+                        $this->arrayparsedcrontab[$group]['groupcomment'] .= substr($crontabline, 1) . "\n";
+                        //    $return[$group]['groupcomment'] .= substr($crontabline, 1) . "\n";
+                    }
+                } elseif ($parsedline['state'] == 1) {
 
-                $return[$group]['jobs'][] = array(
-                    'comment' => $comment,
-                    'command' => $crontabline,
-                    'matches' => array_combine($keystomatch, $parsedline['matches'])
-                );
-                $x++;
+                    echo "=====================================\n";
+                    echo "LINE: " . $crontabline . "\n";
+                    echo "GROUP: " . $group . "\n";
+                    echo "GROUPCOMMENT: " . $groupcomment . "\n";
+                    echo "COMMENT: " . $comment . "\n";
+                    echo "x: " . $x . "\n";
+                    echo "=====================================\n";
+
+                    if ($parsedline['job'] == 'inactive command') {
+                        $keystomatch = $this->matches_keys_inactive;
+                        $commentinactive = $parsedline['matches']['1'];
+                    } else {
+                        $keystomatch = $this->matches_keys;
+                    }
+
+                    $this->arrayparsedcrontab[$group]['jobs'][] = array(
+                        'comment' => $comment,
+                        'command' => $crontabline,
+                        'commentinactive' => $commentinactive,
+                        'matches' => array_combine($keystomatch, $parsedline['matches'])
+                    );
+                    $x++;
+                }
             }
         }
-
+        return $this->arrayparsedcrontab;
     }
 
     /**

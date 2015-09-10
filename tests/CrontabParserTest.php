@@ -38,7 +38,6 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
      */
     public function testCrontabElementMinutesTrue() {
         foreach ($this->ElementsToTest['min']['true'] as $elementtotest) {
-            // $this->assertTrue($this->CheckElement($elementtotest,$this->regexmin), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexmin);
             $this->AssertArrayCountTrue($matches,2,$elementtotest);
         }
@@ -49,7 +48,6 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
      */
     public function testCrontabElementMinutesFalse() {
         foreach ($this->ElementsToTest['min']['false'] as $elementtotest) {
-            // $this->assertTrue($this->CheckElement($elementtotest,$this->regexmin), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexmin);
             $this->AssertArrayCountFalse($matches,$elementtotest);
         }
@@ -59,7 +57,6 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
      */
     public function testCrontabElementHoursTrue() {
         foreach ($this->ElementsToTest['hrs']['true'] as $elementtotest) {
-            //$this->assertTrue($this->CheckElement($elementtotest,$this->regexhrs), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexhrs);
             $this->AssertArrayCountTrue($matches,2,$elementtotest);
         }
@@ -70,7 +67,6 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
      */
     public function testCrontabElementHoursFalse() {
         foreach ($this->ElementsToTest['hrs']['false'] as $elementtotest) {
-            //$this->assertFalse($this->CheckElement($elementtotest,$this->regexhrs), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexhrs);
             $this->AssertArrayCountFalse($matches,$elementtotest);
         }
@@ -80,7 +76,6 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
      */
     public function testCrontabElementDomTrue() {
         foreach ($this->ElementsToTest['dom']['true'] as $elementtotest) {
-//            $this->assertTrue($this->CheckElement($elementtotest,$this->regexdom), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexdom);
             $this->AssertArrayCountTrue($matches,2,$elementtotest);
         }
@@ -90,7 +85,6 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
      */
     public function testCrontabElementDomFalse() {
         foreach ($this->ElementsToTest['dom']['false'] as $elementtotest) {
-//            $this->assertFalse($this->CheckElement($elementtotest,$this->regexdom), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexdom);
             $this->AssertArrayCountFalse($matches,$elementtotest);
         }
@@ -100,7 +94,6 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
      */
     public function testCrontabElementMonTrue() {
         foreach ($this->ElementsToTest['mon']['true'] as $elementtotest) {
-//            $this->assertTrue($this->CheckElement($elementtotest,$this->regexmon), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexmon);
             $this->AssertArrayCountTrue($matches,2,$elementtotest);
         }
@@ -111,7 +104,6 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
      */
     public function testCrontabElementMonFalse() {
         foreach ($this->ElementsToTest['mon']['false'] as $elementtotest) {
-//            $this->assertFalse($this->CheckElement($elementtotest,$this->regexmon), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexmon);
             $this->AssertArrayCountFalse($matches,$elementtotest);
         }
@@ -122,7 +114,6 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
      */
     public function testCrontabElementDowTrue() {
         foreach ($this->ElementsToTest['dow']['true'] as $elementtotest) {
-//            $this->assertTrue($this->CheckElement($elementtotest,$this->regexdow), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexdow);
             $this->AssertArrayCountTrue($matches,2,$elementtotest);
         }
@@ -133,7 +124,6 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
      */
     public function testCrontabElementDowFalse() {
         foreach ($this->ElementsToTest['dow']['false'] as $elementtotest) {
-//            $this->assertFalse($this->CheckElement($elementtotest,$this->regexdow), $elementtotest);
             $matches = $this->CheckElement($elementtotest,\exporter\regex::$regexdow);
             $this->AssertArrayCountFalse($matches,$elementtotest);
         }
@@ -156,12 +146,6 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
             $this->assertFalse($this->Parser->parseLine($line)['state'],$line);
         }
     }
-
-
-//    public function testParsedCrontab() {
-//        $matches = $this->Parser->getParsedCrontab("#1234\n* * * * * /test.sh","testserver");
-//        $this->AssertArrayCountTrue($matches);
-//    }
 
     private $ElementsToTest = array(
         'min' => array(
@@ -307,7 +291,6 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
      */
     public function testCrontabLinesInactiveTrue() {
         foreach ($this->LinesToTestinactive['true'] as $line) {
-            //$this->assertTrue($this->Parser->parseLine($line)['state'],$line);
             $parseLineInactive = $this->Parser->parseLine($line);
             $this->assertTrue($parseLineInactive['job'] == "inactive command");
         }
@@ -328,9 +311,8 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
      */
     public function testCrontabLinesWithCommentTrue() {
         foreach ($this->LinesToTestWithComment['true'] as $line) {
-            //$this->assertTrue($this->Parser->parseLine($line)['state'],$line);
-            $parseLineInactive = $this->Parser->parseLine($line);
-            $this->assertTrue($parseLineInactive['job'] == "command with comment");
+            $parseLineWithComment = $this->Parser->parseLine($line);
+            $this->assertTrue($parseLineWithComment['job'] == "command with comment");
         }
     }
 
@@ -339,8 +321,8 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
      */
     public function testCrontabLinesWithCommentFalse() {
         foreach ($this->LinesToTestWithComment['false'] as $line) {
-            $parseLineInactive = $this->Parser->parseLine($line);
-            $this->assertFalse($parseLineInactive['job'] == "command with comment");
+            $parseLineWithComment = $this->Parser->parseLine($line);
+            $this->assertFalse($parseLineWithComment['job'] == "command with comment");
         }
     }
     /**
@@ -348,9 +330,8 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
      */
     public function testCrontabLinesInactiveWithCommentTrue() {
         foreach ($this->LinesToTestInactiveWithComment['true'] as $line) {
-            //$this->assertTrue($this->Parser->parseLine($line)['state'],$line);
-            $parseLineInactive = $this->Parser->parseLine($line);
-            $this->assertTrue($parseLineInactive['job'] == "inactive command with comment");
+            $parseLineInactiveWithComments = $this->Parser->parseLine($line);
+            $this->assertTrue($parseLineInactiveWithComments['job'] == "inactive command with comment");
         }
     }
 
@@ -359,8 +340,8 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
      */
     public function testCrontabLinesInactiveWithCommentFalse() {
         foreach ($this->LinesToTestInactiveWithComment['false'] as $line) {
-            $parseLineInactive = $this->Parser->parseLine($line);
-            $this->assertFalse($parseLineInactive['job'] == "inactive command with comment");
+            $parseLineInactiveWithComments = $this->Parser->parseLine($line);
+            $this->assertFalse($parseLineInactiveWithComments['job'] == "inactive command with comment");
         }
     }
 }

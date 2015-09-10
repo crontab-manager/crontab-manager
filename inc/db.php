@@ -54,6 +54,7 @@ class db implements db_interface {
         $affected_rows   = 0;
         $numrows         = 0;
         $paramsWithTypes = array();
+        $bind_names = array();
 
         $stmt = $this->link->prepare($sql);
         if (!$stmt) {

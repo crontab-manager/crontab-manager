@@ -3,6 +3,9 @@ namespace exporter;
 
 class regex {
 
+    //matches comment for inactive command
+    public static $regexcominactive = '[#]+[^#]*#+';
+
     //matches minutes 2 or 0-5 or * or 1,2 or */5
     public static $regexmin = '(?:\*\/[0-5]?[0-9]|\*|[0-5]?[0-9]|(?:[0-5]?[0-9])-(?:[0-5]?[0-9])|(?:[0-5]?[0-9])(?:,(?:[0-5]?[0-9]))+)';
 
@@ -17,6 +20,7 @@ class regex {
 
     //matches day of week 2 or 0-5 or * or 1,2 or */5
     public static $regexdow = '(?:\*|[0-6]|[0-6]-[0-6]|\*\/[0-6]|[0-6](?:,[0-6])+)';
-    
-    
+
+    //matches comment at the end of the line
+    public static $regexcomeol = '#*\s*(.[^#]+)';
 }

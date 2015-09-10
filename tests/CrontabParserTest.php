@@ -241,6 +241,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
             '00    09-18 *      * 1-5 /home/ramesh/bin/check-db-status', //tabs
             '10 * * * * /home/ramesh/check-disk-space',
             '* * * * * CMDramesh',
+            '* * * * * CMDramesh #test1234'
         ),
         'false' => array(
             '00 09-18 * *  /home/ramesh/bin/check-db-status',
@@ -279,6 +280,28 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
         )
     );
 
+    private $LinesToTestWithComment = array(
+        'true' => array(
+            '* * * * * CMDramesh #123',
+            '* * * * * CMDramesh ### 123'
+        ),
+        'false' => array(
+            '##34254## * * ',
+            '* * * * * CMDramesh'
+        )
+    );
+
+    private $LinesToTestInactiveWithComment = array(
+        'true' => array(
+            '#123# * * * * * CMDramesh #123',
+            '### 13444 ##* * * * * CMDramesh ### 123'
+        ),
+        'false' => array(
+            '##34254## * * ',
+            '* * * * * CMDramesh'
+        )
+    );
+
     /**
      *
      */
@@ -300,4 +323,44 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
         }
     }
 
+    /**
+     *
+     */
+    public function testCrontabLinesWithCommentTrue() {
+        foreach ($this->LinesToTestWithComment['true'] as $line) {
+            //$this->assertTrue($this->Parser->parseLine($line)['state'],$line);
+            $parseLineInactive = $this->Parser->parseLine($line);
+            $this->assertTrue($parseLineInactive['job'] == "command with comment");
+        }
+    }
+
+    /**
+     *
+     */
+    public function testCrontabLinesWithCommentFalse() {
+        foreach ($this->LinesToTestWithComment['false'] as $line) {
+            $parseLineInactive = $this->Parser->parseLine($line);
+            $this->assertFalse($parseLineInactive['job'] == "command with comment");
+        }
+    }
+    /**
+     *
+     */
+    public function testCrontabLinesInactiveWithCommentTrue() {
+        foreach ($this->LinesToTestInactiveWithComment['true'] as $line) {
+            //$this->assertTrue($this->Parser->parseLine($line)['state'],$line);
+            $parseLineInactive = $this->Parser->parseLine($line);
+            $this->assertTrue($parseLineInactive['job'] == "inactive command with comment");
+        }
+    }
+
+    /**
+     *
+     */
+    public function testCrontabLinesInactiveWithCommentFalse() {
+        foreach ($this->LinesToTestInactiveWithComment['false'] as $line) {
+            $parseLineInactive = $this->Parser->parseLine($line);
+            $this->assertFalse($parseLineInactive['job'] == "inactive command with comment");
+        }
+    }
 }

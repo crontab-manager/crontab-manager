@@ -40,7 +40,7 @@ class ssh {
      */
     public static function getCrontabFromRemoteServer($serveriptotest,$user) {
         $connection = self::getsshConnection($serveriptotest);
-        $data       = self::getsshStreamData($connection, "cat /var/spool/cron/crontabs/".$user);
+        $data       = self::getsshStreamData($connection, "crontab -l -u " . $user);
         return explode("\n", $data);
         //print_r($splitdata);
         //$this->getParsedCrontab($splitdata,$serveriptotest);

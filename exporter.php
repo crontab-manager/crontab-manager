@@ -16,16 +16,19 @@ try {
 $container['config'] = $config;
 
 $parser = new parser();
+$arrayallcrontabs = array();
 
 foreach ($config->getServers() as $server => $serverconfig) {
-    echo "Servername: ".$serverconfig['servername']."\n";
-    echo "IP        : ".$serverconfig['serverip']."\n";
-    $crontab = \exporter\ssh\ssh::getCrontabFromRemoteServer($serverconfig['serverip'],'root');
+    echo "Servername: " . $serverconfig['servername'] . "\n";
+    echo "IP        : " . $serverconfig['serverip'] . "\n";
+    $crontab = \exporter\ssh\ssh::getCrontabFromRemoteServer($serverconfig['serverip'], 'root');
     $crontab_parsed = $parser->getParsedCrontab($crontab);
     echo "Array aus getParsedCrontab: ";
-    print_r($crontab_parsed);
-    echo"\n";
+    $arrayallcrontabs = array_merge($arrayallcrontabs, $crontab_parsed);
 }
+//print_r($crontab_parsed);
+print_r($arrayallcrontabs);
+echo "\n";
 
 
 

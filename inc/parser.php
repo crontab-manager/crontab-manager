@@ -7,9 +7,14 @@ use exporter\config;
 
 class parser {
 
-    private $matches_keys =                  array('match','commentinactive','m','h','dom','mon','dow','command');
-    private $matches_keys_comment =          array('match','commentinactive','m','h','dom','mon','dow','command','comment');
+    private $matches_keys =                  array('match','comment_inactive','m','h','dom','mon','dow','command');
+    private $matches_keys_comment =          array('match','comment_inactive','m','h','dom','mon','dow','command','comment');
     private $arrayparsedcrontab = Array();
+
+    const JOB_WITHOUT_COMMENT = 1;
+    const JOB_WITH_COMMENT = 2;
+    const JOB_INACTIVE_WITH_COMMENT = 3;
+    const JOB_INACTIVE_WITHOUT_COMMENT = 4;
 
     /**
      * @return array
@@ -39,6 +44,8 @@ class parser {
         $x = 0;
         $comment = "";
         $groupcomment = "";
+        print_r($splitdata);
+//        exit;
 
         foreach ($splitdata as $crontabline) {
             $commentinactive = "";
@@ -81,44 +88,44 @@ class parser {
                     $keystomatch = $this->matches_keys;
 
                     switch ($parsedline['job']) {
-                        case 'inactive command':
+                        case self::JOB_INACTIVE_WITHOUT_COMMENT:
                             $keystomatch = $this->matches_keys;
                             $commentinactive = $parsedline['matches']['1'];
                             break;
-                        case 'inactive command with comment':
+                        case self::JOB_INACTIVE_WITH_COMMENT:
                             $keystomatch = $this->matches_keys_comment;
                             $commentinactive = $parsedline['matches']['1'];
                             $comment = $parsedline['matches']['8'];
                             break;
-                        case 'command with comment':
+                        case self::JOB_WITH_COMMENT:
                             $keystomatch = $this->matches_keys_comment;
                             $comment = $parsedline['matches']['8'];
                             break;
-                        case 'command':
+                        case self::JOB_WITHOUT_COMMENT:
                             $keystomatch = $this->matches_keys;
                             break;
                     }
 
 //                    print_r($parsedline);
                     $return[$group]['jobs'][] = array(
-                        'comment' => $comment,
-                        'command' => $crontabline,
-                        'commentinactive' => $commentinactive,
-                        'matches' => array_combine($keystomatch, $parsedline['matches'])
+                        'comment'         => $comment,
+                        'line'            => $crontabline,
+                        'comment_inactive' => $commentinactive,
+                        'matches'         => array_combine($keystomatch, $parsedline['matches'])
                     );
                     $x++;
                 }
             }
         }
-        return $return;
+        return $this->removeEmptyElements($return);
     }
 
 
     /**
      * @param $line
+     * @return array
      */
-    public function parseLine($line)
-    {
+    public function parseLine($line) {
         $regex = '/^(' . regex::$regexcominactive . ')?\s*(' . regex::$regexmin . ')\s+(' . regex::$regexhrs . ')\s+(' . regex::$regexdom . ')\s+(' . regex::$regexmon . ')\s+(' . regex::$regexdow . ')\s+(.[^#]+)' . regex::$regexcomeol . '?#*$/';
         if (preg_match($regex, $line, $matches)) {
 //            echo "=================\n";
@@ -128,26 +135,36 @@ class parser {
             if (count($matches) == 9) {
                 if ($matches['1'] != '') {
                     //echo "inactive with comment\n";
-                    return array('state' => true, 'matches' => $matches, 'job' => "inactive command with comment");
+                    $job = self::JOB_INACTIVE_WITH_COMMENT;
                 } else {
                     //echo "command with comment\n";
-                    return array('state' => true, 'matches' => $matches, 'job' => "command with comment");
+                    $job = self::JOB_WITH_COMMENT;
                 }
             } else {
                 if ($matches['1'] != '') {
                     //echo "inactive\n";
-                    return array('state' => true, 'matches' => $matches, 'job' => "inactive command");
+                    $job = self::JOB_INACTIVE_WITHOUT_COMMENT;
                 } else {
                     //echo "command\n";
-                    return array('state' => true, 'matches' => $matches, 'job' => "command");
+                    $job = self::JOB_WITHOUT_COMMENT;
                 }
 
             }
+            return array('state' => true, 'matches' => $matches, 'job' => $job);
         }
 
         return array('state' => false, 'job' => "empty");
     }
 
 
+    private function removeEmptyElements(array $array) {
+        $newArray = array();
+        foreach ($array as $group) {
+            if (is_array($group) && array_key_exists('jobs',$group) && count($group['jobs'])) {
+                $newArray[] = $group;
+            }
+        }
+        return $newArray;
+    }
 
 }

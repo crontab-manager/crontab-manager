@@ -155,45 +155,51 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
                 '*',
                 '*/15',
                 '*/0',
-                '*/59',
+                '*/0059',
             ),
             'false' => array(
                 '69',
                 'a',
-                '*/99'
+                '123/*'
             )
         ),
         'hrs' => array(
             'true' => array(
                 '0-5',
                 '1,3,5',
-                '*'
+                '*',
+                '*/099'
             ),
             'false' => array(
                 '99',
-                'a'
+                'a',
+                '123/*'
             )
         ),
         'dom' => array(
             'true' => array(
                 '0-5',
                 '1,3,5',
-                '*'
+                '*',
+                '*/099'
             ),
             'false' => array(
                 '99',
-                'a'
+                'a',
+                '123/*'
             )
         ),
         'mon' => array(
             'true' => array(
                 '0-5',
                 '1,3,5',
-                '*'
+                '*',
+                '*/099'
             ),
             'false' => array(
                 '99',
-                'a'
+                'a',
+                '123/*'
             )
         ),
         'dow' => array(
@@ -201,11 +207,13 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
                 '0-5',
                 '1,3,5',
                 '*',
-                '*/5'
+                '*/5',
+                '*/099'
             ),
             'false' => array(
                 '99',
-                'a'
+                'a',
+                '123/*'
             )
         )
     );
@@ -292,7 +300,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
     public function testCrontabLinesInactiveTrue() {
         foreach ($this->LinesToTestinactive['true'] as $line) {
             $parseLineInactive = $this->Parser->parseLine($line);
-            $this->assertTrue($parseLineInactive['job'] == "inactive command");
+            $this->assertTrue($parseLineInactive['job'] == exporter\parser\parser::JOB_INACTIVE_WITHOUT_COMMENT);
         }
     }
 
@@ -302,7 +310,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
     public function testCrontabLinesInactiveFalse() {
         foreach ($this->LinesToTestinactive['false'] as $line) {
             $parseLineInactive = $this->Parser->parseLine($line);
-            $this->assertFalse($parseLineInactive['job'] == "inactive command");
+            $this->assertFalse($parseLineInactive['job'] == exporter\parser\parser::JOB_INACTIVE_WITHOUT_COMMENT);
         }
     }
 
@@ -312,7 +320,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
     public function testCrontabLinesWithCommentTrue() {
         foreach ($this->LinesToTestWithComment['true'] as $line) {
             $parseLineWithComment = $this->Parser->parseLine($line);
-            $this->assertTrue($parseLineWithComment['job'] == "command with comment");
+            $this->assertTrue($parseLineWithComment['job'] == exporter\parser\parser::JOB_WITH_COMMENT);
         }
     }
 
@@ -322,7 +330,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
     public function testCrontabLinesWithCommentFalse() {
         foreach ($this->LinesToTestWithComment['false'] as $line) {
             $parseLineWithComment = $this->Parser->parseLine($line);
-            $this->assertFalse($parseLineWithComment['job'] == "command with comment");
+            $this->assertFalse($parseLineWithComment['job'] == exporter\parser\parser::JOB_WITH_COMMENT);
         }
     }
     /**
@@ -331,7 +339,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
     public function testCrontabLinesInactiveWithCommentTrue() {
         foreach ($this->LinesToTestInactiveWithComment['true'] as $line) {
             $parseLineInactiveWithComments = $this->Parser->parseLine($line);
-            $this->assertTrue($parseLineInactiveWithComments['job'] == "inactive command with comment");
+            $this->assertTrue($parseLineInactiveWithComments['job'] == exporter\parser\parser::JOB_INACTIVE_WITH_COMMENT);
         }
     }
 
@@ -341,7 +349,7 @@ class CrontabParserTest extends PHPUnit_Framework_TestCase {
     public function testCrontabLinesInactiveWithCommentFalse() {
         foreach ($this->LinesToTestInactiveWithComment['false'] as $line) {
             $parseLineInactiveWithComments = $this->Parser->parseLine($line);
-            $this->assertFalse($parseLineInactiveWithComments['job'] == "inactive command with comment");
+            $this->assertFalse($parseLineInactiveWithComments['job'] == exporter\parser\parser::JOB_INACTIVE_WITH_COMMENT);
         }
     }
 }

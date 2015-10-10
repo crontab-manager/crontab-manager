@@ -14,7 +14,8 @@
     "phpunit/phpunit": "^4.7",
     "php": ">=5.5 <7.0",
     "ext-ssh2" : "*",
-    "pimple/pimple": "~3.0"
+    "pimple/pimple": "~3.0",
+    "ulrichsg/getopt-php": "^2.3"
   },
   "autoload": {
     "classmap": [

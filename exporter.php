@@ -1,9 +1,20 @@
 <?php
+
 use exporter\config\config;
 use exporter\parser\parser;
 use Pimple\Container;
+use Ulrichsg\Getopt\Getopt;
+use Ulrichsg\Getopt\Option;
 
 require_once 'vendor/autoload.php';
+
+$getopt = new Ulrichsg\Getopt\Getopt(array(
+    new Option('m', 'mode', Getopt::REQUIRED_ARGUMENT),
+    new Option('t', 'todo', Getopt::OPTIONAL_ARGUMENT)
+));
+$getopt->parse();
+
+print_r($getopt);
 
 $container = new Container();
 
@@ -29,6 +40,8 @@ foreach ($config->getServers() as $server => $serverconfig) {
 //print_r($crontab_parsed);
 print_r($arrayallcrontabs);
 echo "\n";
+
+
 
 
 

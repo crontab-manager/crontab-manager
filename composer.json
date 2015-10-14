@@ -19,7 +19,7 @@
   },
   "autoload": {
     "classmap": [
-      "inc/"
+      "inc/","objects/"
     ]
   },
   "require-dev": {

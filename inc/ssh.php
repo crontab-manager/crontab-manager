@@ -42,8 +42,6 @@ class ssh {
         $connection = self::getsshConnection($serveriptotest);
         $data       = self::getsshStreamData($connection, "crontab -l -u " . $user);
         return explode("\n", $data);
-//        $this->getParsedCrontab($splitdata,$serveriptotest);
-         return $arrayparsedcrontab;
     }
 
 }

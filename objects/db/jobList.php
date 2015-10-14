@@ -1,11 +1,23 @@
 <?php
 namespace exporter\objects\db;
 
-class jobList /*implements jobListInterface*/ implements \ArrayAccess,\Countable {
+use exporter\utils\utils;
 
-    private $jobGroup = array();
+class jobList implements \ArrayAccess,\Countable {
 
+    private $jobList = array();
 
+    public function addJob(job $job) {
+        $this->jobList[] = $job;
+    }
+
+    /**
+     *
+     */
+    public function save() {
+        var_dump($this->jobList);
+        utils::debug("save","JOBLIST");
+    }
 
     /**
      * Whether a offset exists
@@ -19,9 +31,8 @@ class jobList /*implements jobListInterface*/ implements \ArrayAccess,\Countable
      * The return value will be casted to boolean if non-boolean was returned.
      * @since 5.0.0
      */
-    public function offsetExists($offset)
-    {
-        // TODO: Implement offsetExists() method.
+    public function offsetExists($offset) {
+        return array_key_exists($offset,$this->jobList);
     }
 
     /**
@@ -33,9 +44,8 @@ class jobList /*implements jobListInterface*/ implements \ArrayAccess,\Countable
      * @return mixed Can return all value types.
      * @since 5.0.0
      */
-    public function offsetGet($offset)
-    {
-        // TODO: Implement offsetGet() method.
+    public function offsetGet($offset) {
+        return $this->jobList[$offset];
     }
 
     /**
@@ -78,9 +88,6 @@ class jobList /*implements jobListInterface*/ implements \ArrayAccess,\Countable
      */
     public function count() {
         // TODO: Implement count() method.
-    }
-
-    public function saveJob() {
-        echo "Save Array jobList.";
+        return count($this->jobList);
     }
 }

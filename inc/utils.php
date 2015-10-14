@@ -13,4 +13,13 @@ class utils {
         }
     }
 
+    /**
+     * @param $mode
+     * @param $txt
+     */
+    public static function debug($mode, $txt) {
+        $trace = debug_backtrace();
+        echo $trace[1]['class']." : MODE: ".$mode." -> ".$txt."\n";
+    }
+
 }

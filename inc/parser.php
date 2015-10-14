@@ -42,16 +42,15 @@ class parser {
         $return = array();
         $group = 0;
         $x = 0;
-        $comment = "";
         $groupcomment = "";
         print_r($splitdata);
 //        exit;
 
         foreach ($splitdata as $crontabline) {
             $commentinactive = "";
+            $comment = "";
             //leere Zeile
             if ($crontabline == "") {
-                $comment = "";
                 $groupcomment = "";
                 $group++;
                 $x = 0;

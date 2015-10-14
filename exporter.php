@@ -1,14 +1,11 @@
 <?php
 require_once 'vendor/autoload.php';
 
-
 use exporter\config\config;
 use exporter\parser\parser;
 use Pimple\Container;
 use Ulrichsg\Getopt\Getopt;
 use Ulrichsg\Getopt\Option;
-
-
 
 $getopt = new Ulrichsg\Getopt\Getopt(array(
     new Option('m', 'mode', Getopt::REQUIRED_ARGUMENT),
@@ -41,9 +38,30 @@ foreach ($config->getServers() as $server => $serverconfig) {
 }
 //print_r($crontab_parsed);
 print_r($arrayallcrontabs);
-echo "\n";
 
-$testdb = new exporter\objects\db\job();
+foreach ($arrayallcrontabs as $groups => $groupdata) {
+    $jobGroup = new \exporter\objects\db\jobGroup();
+    if ($groupdata['groupcomment']) {
+        $jobGroup->setComment($groupdata['groupcomment']);
+    }
+    $jobList = new \exporter\objects\db\jobList();
+    foreach ($groupdata['jobs'] as $jobdata) {
+        $job = new \exporter\objects\db\job();
+        $job->setComment($jobdata['comment']);
+        $job->setCommentInactive($jobdata['comment_inactive']);
+        $job->setCommand($jobdata['matches']['command']);
+        $job->setGroup($jobGroup);
+        $job->setTime(
+            $jobdata['matches']['m'],
+            $jobdata['matches']['h'],
+            $jobdata['matches']['dom'],
+            $jobdata['matches']['mon'],
+            $jobdata['matches']['dow']
+        );
+        $jobList->addJob($job);
+    }
+    $jobList->save();
+}
 
 /*
 foreach ($arrayallcrontabs as $group) {
